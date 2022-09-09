@@ -56,6 +56,16 @@ class SetQueue<T> {
         set.add(value)
     }
 
+    fun push(value: T) {
+        set.add(value)
+    }
+
+    fun pop(): T? {
+        val last = peekLast()
+        set.remove(last)
+        return last
+    }
+
     fun dequeue(): T? {
         val first = peek()
         set.remove(first)
@@ -66,7 +76,15 @@ class SetQueue<T> {
         return set.firstOrNull()
     }
 
+    fun peekLast(): T? {
+        return set.lastOrNull()
+    }
+
     fun contains(value: T): Boolean {
         return set.contains(value)
+    }
+
+    fun size(): Int {
+        return set.size
     }
 }

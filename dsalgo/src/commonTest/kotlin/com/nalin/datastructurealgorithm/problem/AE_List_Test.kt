@@ -56,14 +56,33 @@ class AE_List_Test {
     }
 
     @Test
-    fun testFindRectangleFromPoints() {
-        val lot = List(100000) { listOf(it, 2) }.toMutableList()
-        lot.addAll(List(1) { listOf(it, 3) })
-//        mergePointsFromGivenDimension(lot, 0, 1)
+    fun testTandemCycle() {
         assertEquals(
-            mergePointsFromGivenDimension(lot, 0, 1),
-            mutableMapOf(Pair(0, mutableSetOf(2, 3)))
-        )
+            tandemBicycle(
+                mutableListOf(5, 5, 3, 9, 2),
+                mutableListOf(3, 6, 7, 2, 1),
+                true
+            ), 32
+        );
+        assertEquals(
+            tandemBicycle(
+                mutableListOf(5, 5, 3, 9, 2),
+                mutableListOf(3, 6, 7, 2, 1),
+                false
+            ), 25
+        );
+        assertEquals(
+            tandemBicycle(
+                mutableListOf(),
+                mutableListOf(),
+                true
+            ), 0
+        );
     }
 
+    @Test
+    fun testClassPhotos() {
+        assertEquals(classPhotos(mutableListOf(6, 9, 2, 4, 5), mutableListOf<Int>(5, 8, 1, 3, 4)), true);
+        assertEquals(classPhotos(mutableListOf(5, 8, 1, 3, 4, 9), mutableListOf<Int>(6, 9, 2, 4, 5, 1)), false);
+    }
 }

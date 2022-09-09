@@ -1,6 +1,8 @@
 package com.nalin.datastructurealgorithm.performance
 
-import com.nalin.datastructurealgorithm.ds.SetQueue
+import com.nalin.datastructurealgorithm.ds.*
+import com.nalin.datastructurealgorithm.problems.getNthFib
+import kotlin.math.ceil
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -9,13 +11,32 @@ import kotlin.test.assertTrue
  * Checks scalability of datastructure and algorithm
  */
 class PerformanceTest {
-    val TEST_SIZE = 100000
+    val TEST_SIZE = 1_000_000
 
     @Test
     fun array_sequence_break_check() {
         val array = arrayOfNulls<Int>(TEST_SIZE) // 0 MS
         for (i in 0 until TEST_SIZE) { // 4 ms
             array[i] = i
+        }
+
+        var sequence: Int? = null // 1 ms
+        for (i in array.indices) {
+            if (array[i] == i) {
+                sequence = i
+            } else {
+                break
+            }
+        }
+        assertEquals(sequence, TEST_SIZE - 1)
+        assertTrue { array.size == TEST_SIZE }
+    }
+
+    @Test
+    fun mutable_array_sequence_break_check() {
+        val array = mutableListOf<Int>() // 0 MS
+        for (i in 0 until TEST_SIZE) { // 4 ms
+            array.add(i)
         }
 
         var sequence: Int? = null // 1 ms
@@ -89,18 +110,87 @@ class PerformanceTest {
     @Test
     fun setQueue() {
         val queue = SetQueue<Int>()
-        queue.enqueue(1)
-        queue.enqueue(3)
-        queue.enqueue(4)
-        queue.enqueue(-1)
-        queue.enqueue(4)
-        assertEquals(queue.contains(1), true)
-        assertEquals(queue.dequeue(), 1)
-        assertEquals(queue.contains(1), false)
-        assertEquals(queue.dequeue(), 3)
-        assertEquals(queue.dequeue(), 4)
-        assertEquals(queue.dequeue(), -1)
-        assertEquals(queue.dequeue(), null)
+        for (i in 1..TEST_SIZE) {
+            queue.enqueue(i)
+        }
+        assertEquals(queue.size(), TEST_SIZE)
+        while (queue.peek() != null) {
+            queue.dequeue()
+        }
+        assertEquals(queue.size(), 0)
     }
 
+
+    @Test
+    fun merging2Array() {
+        fun <T> merge(array1: List<T>, array2: List<T>): List<T> {
+            return array1 + array2
+        }
+
+        val output = merge(Array(TEST_SIZE) { 1 }.toList(), Array(TEST_SIZE) { 2 }.toList())
+        assertEquals(output.size, 2 * TEST_SIZE)
+        assertEquals(output.sorted().toMutableList()[0], 1);
+    }
+
+    @Test
+    fun testFib() {
+        assertEquals(getNthFib(1), 0.0)
+        assertEquals(getNthFib(2), 1.0)
+        assertEquals(getNthFib(3), 1.0)
+        assertEquals(getNthFib(6), 5.0)
+
+        assertEquals(getNthFib(TEST_SIZE), Double.POSITIVE_INFINITY)
+    }
+
+    @Test
+    fun testSplitArray() {
+        fun splitArray(array: List<Int>, count: Int): MutableList<List<Int>> {
+            val output = mutableListOf<List<Int>>()
+            var subArray = mutableListOf<Int>()
+            for (i in array.indices step count) {
+                val maxSize = if (i + count < array.size) i + count else array.size;
+                for (j in i until maxSize) {
+                    subArray.add(array[j])
+                }
+                output.add(subArray)
+                subArray = mutableListOf<Int>()
+            }
+            return output
+        }
+
+        val array = mutableListOf<Int>() // 0 MS
+        for (i in 0 until TEST_SIZE) { // 4 ms
+            array.add(i)
+        }
+        val count = 10
+        val output = splitArray(array, count);
+        assertEquals(output[0].size, count)
+        assertEquals(output.size, ceil(array.size.toFloat() / count).toInt())
+    }
+
+    @Test
+    fun avlTreePerformance() {
+        val tree = AVLTree<Int>()
+        for (i in TEST_SIZE downTo 0) {
+            tree.insert(i)
+        }
+        assertEquals(tree.root()?.max(), TEST_SIZE)
+        assertEquals(tree.root()?.min(), 0)
+        assertEquals((tree.root() as BSTNode).height, 20)
+    }
+
+    @Test
+    fun sortPerformance() {
+
+        val array = MutableList(TEST_SIZE) {
+            TEST_SIZE - it
+        } // 64ms
+//        val array = arrayListOf<Int>()
+//        for (i in TEST_SIZE downTo 0) {
+//            array.add(i)
+//        } // 64ms
+        val sorted = array.sorted()
+        assertEquals(sorted.last(), TEST_SIZE)
+        assertEquals(sorted.first(), 1)
+    }
 }

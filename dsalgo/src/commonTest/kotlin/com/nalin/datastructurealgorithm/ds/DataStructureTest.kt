@@ -95,4 +95,52 @@ class DataStructureTest {
         assertEquals(graph2.nodeTraversalTopological(), listOf<Char>('0', '4', '1', '3', '2', '5'))
 
     }
+
+    @Test
+    fun setQueue() {
+        val queue = SetQueue<Int>()
+        queue.enqueue(1)
+        queue.enqueue(3)
+        queue.enqueue(4)
+        queue.enqueue(-1)
+        queue.enqueue(4)
+        assertEquals(queue.contains(1), true)
+        assertEquals(queue.dequeue(), 1)
+        assertEquals(queue.contains(1), false)
+        assertEquals(queue.dequeue(), 3)
+        assertEquals(queue.dequeue(), 4)
+        assertEquals(queue.dequeue(), -1)
+        assertEquals(queue.dequeue(), null)
+
+        // Using this as Stack
+        val stack = SetQueue<Int>()
+        stack.push(1)
+        stack.push(3)
+        stack.push(4)
+        stack.push(-1)
+        stack.push(4)
+        assertEquals(stack.pop(), -1)
+        assertEquals(stack.pop(), 4)
+        assertEquals(stack.pop(), 3)
+        assertEquals(stack.pop(), 1)
+        assertEquals(stack.pop(), null)
+    }
+
+    @Test
+    fun avlTreeTest() {
+        val tree = AVLTree<Int>()
+        tree.insert(4)
+        tree.insert(3)
+        tree.insert(2)
+        tree.insert(1)
+        tree.insert(1)
+        tree.insert(1)
+        assertEquals(tree.search(4), true)
+        assertEquals(tree.search(5), false)
+        assertEquals(tree.root()!!.value(), 3)
+        assertEquals(tree.find(1)?.count, 3)
+        assertEquals(tree.root()!!.treeTraversalLTR(), listOf(1, 2, 3, 4))
+        assertEquals(tree.root()!!.min(), 1)
+        assertEquals(tree.root()!!.max(), 4)
+    }
 }

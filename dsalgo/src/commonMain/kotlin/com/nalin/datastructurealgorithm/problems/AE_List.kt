@@ -65,59 +65,104 @@ fun linkedListPalindrome(linkedList: LinkedListNode<Int>?): Boolean {
 }
 
 /**
- * Find min area rectangle in 2D-plane
+ * https://www.algoexpert.io/questions/tandem-bicycle
+ * Given 2 players and set of speed, find maximum total speed and minimum total speed
  */
-fun minimumAreaRectangle(points: List<List<Int>>): Int {
+fun tandemBicycle(
+    redShirtSpeeds: MutableList<Int>,
+    blueShirtSpeeds: MutableList<Int>,
+    fastest: Boolean
+): Int {
+    if (redShirtSpeeds.size != blueShirtSpeeds.size) {
+        return -1
+    }
+    redShirtSpeeds.sortDescending()
+    blueShirtSpeeds.sortDescending()
+    var redPointer = 0
+    var bluePointer = if (fastest) redShirtSpeeds.size - 1 else 0
+    var totalPoint = 0
+    while (redPointer < redShirtSpeeds.size) {
+        totalPoint += max(redShirtSpeeds[redPointer], blueShirtSpeeds[bluePointer])
+        redPointer++
+        bluePointer = if (fastest) bluePointer - 1 else bluePointer + 1
+    }
+    return totalPoint
+}
+
+fun twoNumberSum(array: MutableList<Int>, targetSum: Int): List<Int> {
+    val arraySet = mutableSetOf<Int>()
+    for (num in array) {
+        arraySet.add(num)
+    }
+    for (num in array) {
+        if (num != targetSum - num && arraySet.contains(targetSum - num)) {
+            return listOf(targetSum - num, num)
+        }
+    }
     // Write your code here.
-    return 0
+    return listOf<Int>()
 }
 
-fun findRectangleFromPoints(points: List<List<Int>>) {
-    val mutablePoints = points.toMutableList()
-    // Need in x, y plane only
-    // square can also be consider as rect
-    // 4 points in x, y plane will form triangle if
-    // 2 points in x, 2 points in y are same
-    // x1,y1 x1,y2 x2,y1 x2,y2 -> x1,x2,y1,y2
-    // 1,5 2,5 1,3 2,3 -> 1,2,5,3
+/**
+ * https://www.algoexpert.io/questions/class-photos
+ */
+fun classPhotos(redShirtHeights: MutableList<Int>, blueShirtHeights: MutableList<Int>): Boolean {
+    // Write your code here.
+    if (redShirtHeights.size == blueShirtHeights.size) {
+        val sortedRed = redShirtHeights.sorted()
+        val sortedBlue = blueShirtHeights.sorted()
+        var directionSmall: Boolean? = null
+        for (i in sortedRed.indices) {
 
-    // nlogn + n ^ 2 + n
+            val diff = sortedRed[i] - sortedBlue[i]
+            if (directionSmall == null) {
+                directionSmall = diff < 0
+            } else if ((directionSmall == true && diff < 0) || directionSmall == false && diff > 0) {
+                continue;
+            } else {
+                return false
+            }
 
-    val mapX = mergePointsFromGivenDimension(mutablePoints, 0, 1) // 1,5 1,3
-    val mapY = mergePointsFromGivenDimension(mutablePoints, 1, 0)
-
-    for ((xIndex, yPoints) in mapX) {
-        // 5, 3, 8, 9
-
-    }
-    // 5 -> 1 or 3 -> 1 and 3 in x contains 3
-
-    // check if a point can be part of a rect
-}
-
-fun mergePointsFromGivenDimension(
-    points: MutableList<List<Int>>,
-    dimensionFrom: Int,
-    dimensionTo: Int
-): MutableMap<Int, MutableSet<Int>> {
-    val dict: MutableMap<Int, MutableSet<Int>> = mutableMapOf()
-    for (point in points) {
-        var list: MutableSet<Int>? = dict[point[dimensionFrom]]
-        if (list == null) {
-            list = mutableSetOf()
         }
-        list.add(point[dimensionTo])
-        dict[point[dimensionFrom]] = list
+        return true
     }
-
-    val dictIterator = dict.entries.iterator()
-    while (dictIterator.hasNext()) {
-        val (_, value) = dictIterator.next()
-        if (value.size < 2) {
-            dictIterator.remove()
-        }
-    }
-    return dict
+    return false
 }
+
+fun getNthFib(n: Int): Double {
+
+    if (n <= 0) return 0.0
+    val dp = mutableMapOf<Int, Double>()
+    dp[0] = 0.0
+    dp[1] = 1.0
+    for (i in 2 until n) {
+        dp[i] = dp[i - 1]!! + dp[i - 2]!!
+    }
+    return dp[n - 1]!!
+
+
+//    fun fib(n: Int, dp: MutableMap<Int, Double>): Double {
+//        if (dp.contains(n)) {
+//            return dp[n]!!
+//        }
+//        var output = 0.0;
+//        if (n == 0) {
+//            output =  0.0
+//        }
+//        if (n == 1) {
+//            output = 1.0
+//        }
+//
+//        if (n >= 2) {
+//            output = fib(n - 1, dp) + fib(n - 2, dp)
+//            dp[n] = output;
+//        }
+//
+//        return output;
+//    }
+//    if (n == 0) return 0.0;
+//    return fib(n-1, dp)
+}
+
 
 
