@@ -176,7 +176,16 @@ class PerformanceTest {
         }
         assertEquals(tree.root()?.max(), TEST_SIZE)
         assertEquals(tree.root()?.min(), 0)
-        assertEquals((tree.root() as BSTNode).height, 20)
+        assertEquals(tree.size(), TEST_SIZE + 1);
+        assertEquals(tree.height(), 20)
+        assertEquals(tree.root()?.value(), 475713)
+        assertEquals(tree.root()?.leftNode()?.max(), 475712)
+        assertEquals(tree.root()?.leftNode()?.min(), 0)
+        assertEquals(tree.root()?.rightNode()?.min(), 475714)
+        assertEquals(tree.root()?.rightNode()?.max(), TEST_SIZE)
+        assertEquals(tree.isBST(), true);
+        assertEquals(tree.isBalanced(), true);
+        assertEquals(tree.isBalancedBST(), true);
     }
 
     @Test

@@ -138,9 +138,10 @@ class DataStructureTest {
         assertEquals(tree.search(4), true)
         assertEquals(tree.search(5), false)
         assertEquals(tree.root()!!.value(), 3)
-        assertEquals(tree.find(1)?.count, 3)
+        assertEquals((tree.find(1) as BSTNode<Int>).count, 3)
         assertEquals(tree.root()!!.treeTraversalLTR(), listOf(1, 2, 3, 4))
         assertEquals(tree.root()!!.min(), 1)
         assertEquals(tree.root()!!.max(), 4)
+        assertEquals(tree.size(), 6)
     }
 }

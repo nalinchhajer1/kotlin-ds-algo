@@ -21,7 +21,7 @@ class BSTNode<T>(
         return max(this.leftNode?.height ?: 0, this.rightNode?.height ?: 0)
     }
 
-    override fun value(): T? {
+    override fun value(): T {
         return value
     }
 
@@ -34,29 +34,10 @@ class BSTNode<T>(
     }
 }
 
-interface BSTTree<T : Comparable<T>> {
-    fun root(): BSTNode<T>?
+interface BSTTree<T : Comparable<T>> : Tree<T> {
     fun insert(value: T)
 }
 
-fun <T : Comparable<T>> BSTTree<T>.search(value: T): Boolean {
-    return find(value) != null
-}
-
-fun <T : Comparable<T>> BSTTree<T>.find(value: T): BSTNode<T>? {
-    var traverseNode: BSTNode<T>? = root()
-    while (traverseNode != null) {
-        if (value == traverseNode.value) {
-            return traverseNode;
-        }
-        traverseNode = if (value < traverseNode.value) {
-            traverseNode.leftNode
-        } else {
-            traverseNode.rightNode
-        }
-    }
-    return null
-}
 
 /**
  * Creates a self balancing Binary tree
@@ -65,6 +46,7 @@ fun <T : Comparable<T>> BSTTree<T>.find(value: T): BSTNode<T>? {
 class AVLTree<T : Comparable<T>> : BSTTree<T> {
 
     private var rootNode: BSTNode<T>? = null
+    private var count = 0
 
     override fun root(): BSTNode<T>? {
         return rootNode
@@ -77,13 +59,22 @@ class AVLTree<T : Comparable<T>> : BSTTree<T> {
         this.rootNode = _insertInBST(this.rootNode, value);
     }
 
+    /**
+     * Count
+     */
+    override fun size(): Int {
+        return count
+    }
+
     private fun _insertInBST(node: BSTNode<T>?, value: T): BSTNode<T> {
         if (node == null) {
+            count++;
             return BSTNode(value)
         }
 
         if (node.value == value) {
             node.count++
+            count++
             return node
         }
 
@@ -150,4 +141,8 @@ class AVLTree<T : Comparable<T>> : BSTTree<T> {
     }
 
 
+}
+
+fun <T : Comparable<T>> AVLTree<T>.height(): Int {
+    return (root() as BSTNode).height
 }
