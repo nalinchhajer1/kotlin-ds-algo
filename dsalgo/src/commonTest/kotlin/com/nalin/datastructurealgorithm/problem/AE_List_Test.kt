@@ -85,4 +85,18 @@ class AE_List_Test {
         assertEquals(classPhotos(mutableListOf(6, 9, 2, 4, 5), mutableListOf<Int>(5, 8, 1, 3, 4)), true);
         assertEquals(classPhotos(mutableListOf(5, 8, 1, 3, 4, 9), mutableListOf<Int>(6, 9, 2, 4, 5, 1)), false);
     }
+
+    @Test
+    fun testTwoNumberSum() {
+        assertEquals(twoNumberSum(mutableListOf(9,11,1), 10), listOf(1,9));
+    }
+
+    @Test
+    fun testRiverSizes() {
+        assertEquals(riverSizes(listOf(listOf(1,1,1), listOf(1,0,0), listOf(1,0,1))), listOf(5,1));
+        assertEquals(riverSizes(listOf(listOf(0,0,0), listOf(0,0,0))), listOf());
+        assertEquals(riverSizes(listOf(listOf(0,0,0), listOf(0,1))), listOf(1));
+        assertEquals(riverSizes(listOf(listOf())), listOf());
+    }
+
 }

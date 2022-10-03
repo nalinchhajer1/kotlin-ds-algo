@@ -164,5 +164,78 @@ fun getNthFib(n: Int): Double {
 //    return fib(n-1, dp)
 }
 
+/**
+ * Find Islands in given matrix
+ */
+fun riverSizes(matrix: List<List<Int>>): List<Int> {
+    // DFS
+    val output = mutableListOf<Int>()
+    if (matrix.isEmpty()) return output
+    val visited = mutableListOf<MutableList<Int>>()
+    for (list in matrix) {
+        val visitedList = mutableListOf<Int>()
+        visited.add(visitedList)
+        for (item in list) {
+            visitedList.add(0)
+        }
+    }
 
+    var nextNumber = 1;
+
+    fun validatePosAndAdd(queue: MutableSet<Pair<Int, Int>>, i: Int, j: Int, isRiver: Int) {
+        if (i < matrix.size
+            && i >= 0
+            && j < matrix[i].size
+            && j >= 0
+            && matrix[i][j] == isRiver
+            && visited[i][j] == 0
+        ) {
+            queue.add(Pair(i, j))
+        }
+    }
+
+    fun explorePos(pos: Pair<Int, Int>) {
+        val isRiver = matrix[pos.first][pos.second]
+        var count = 0
+        // run a dfs and mark all point is visited or not
+        val number = if (isRiver == 0) {
+            -1
+        } else {
+            nextNumber
+        }
+
+        val queue = mutableSetOf<Pair<Int, Int>>()
+        queue.add(pos)
+        while (queue.size > 0) {
+            val currentPos = queue.firstOrNull()!!
+            queue.remove(currentPos);
+            count++
+            visited[currentPos.first][currentPos.second] = number
+            // right
+            validatePosAndAdd(queue, currentPos.first + 1, currentPos.second, isRiver)
+            // bottom
+            validatePosAndAdd(queue, currentPos.first, currentPos.second + 1, isRiver)
+            // top
+            validatePosAndAdd(queue, currentPos.first - 1, currentPos.second, isRiver)
+            // left
+            validatePosAndAdd(queue, currentPos.first, currentPos.second - 1, isRiver)
+        }
+
+        if (isRiver == 1) {
+            output.add(count)
+            nextNumber++
+        }
+    }
+
+
+    for (i in matrix.indices) {
+        for (j in matrix[i].indices) {
+            if (visited[i][j] == 0) {
+                explorePos(Pair(i, j))
+            }
+        }
+    }
+
+    return output
+}
 

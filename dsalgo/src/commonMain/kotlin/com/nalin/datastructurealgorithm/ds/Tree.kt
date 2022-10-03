@@ -30,7 +30,6 @@ class TreeNodeImpl<T>(
     override fun rightNode(): TreeNodeImpl<T>? {
         return rightNode
     }
-
 }
 
 fun <T : Comparable<T>> Tree<T>.search(value: T): Boolean {
@@ -170,6 +169,7 @@ class ArrayTree<T>(array: Array<T?>) : Tree<T> {
         fun _createTreeNode(rootNode: TreeNode<T>?, index: Int): ArrayTreeNode<T>? {
             if (index < array.size && array[index] != null) {
                 val node = ArrayTreeNode<T>(array[index]!!)
+                size++
                 node.leftNode = _createTreeNode(rootNode, ArrayTreeNode.leftChildIndex(index))
                 node.rightNode = _createTreeNode(rootNode, ArrayTreeNode.leftChildIndex(index) + 1)
                 return node
