@@ -50,13 +50,13 @@ fun lcm(a: Int, b: Int): Int {
     return (a * b) / gcd(a, b)
 }
 
-fun binarySearch(array: List<Int>, target: Int): Int {
+fun binarySearch(array: List<Int>, target: Int): Boolean {
     // Write your code here.
-    fun search(range: IntRange): Int {
+    fun search(range: IntRange): Boolean {
         val mid = range.start + ((range.endInclusive - range.start) shr 1)
-        if (range.start > mid || range.start > range.endInclusive) return -1;
+        if (range.start > mid || range.start > range.endInclusive) return false;
         if (array[mid] == target) {
-            return mid;
+            return true;
         }
         if (array[mid] > target) {
             return search(range.start..mid - 1)
