@@ -6,8 +6,11 @@ I am taking inspiration from https://github.com/nalinchhajer2/javascript-ds-algo
 
 ## DataStructure
 
-* [AVL TREE](./dsalgo/src/commonTest/kotlin/com/nalin/datastructurealgorithm/ds/AVLTree.kt)
-* 
+* [AVL TREE](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/ds/AVLTree.kt)
+* [Graph](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/ds/Graph.kt)
+* [Heap](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/ds/Heap.kt)
+* [IndexedPriorityQueue](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/ds/IndexedPriorityQueue.kt)
+* [Tree](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/ds/Tree.kt)
 
 ## Performance Test
 

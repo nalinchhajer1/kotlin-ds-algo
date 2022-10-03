@@ -125,23 +125,4 @@ class DataStructureTest {
         assertEquals(stack.pop(), 1)
         assertEquals(stack.pop(), null)
     }
-
-    @Test
-    fun avlTreeTest() {
-        val tree = AVLTree<Int>()
-        tree.insert(4)
-        tree.insert(3)
-        tree.insert(2)
-        tree.insert(1)
-        tree.insert(1)
-        tree.insert(1)
-        assertEquals(tree.search(4), true)
-        assertEquals(tree.search(5), false)
-        assertEquals(tree.root()!!.value(), 3)
-        assertEquals((tree.find(1) as BSTNode<Int>).count, 3)
-        assertEquals(tree.root()!!.treeTraversalLTR(), listOf(1, 2, 3, 4))
-        assertEquals(tree.root()!!.min(), 1)
-        assertEquals(tree.root()!!.max(), 4)
-        assertEquals(tree.size(), 6)
-    }
 }
