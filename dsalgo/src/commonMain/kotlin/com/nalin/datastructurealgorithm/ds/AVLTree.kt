@@ -4,42 +4,7 @@ import kotlin.math.abs
 import kotlin.math.max
 
 /**
- * AVL Tree node
- */
-class BSTNode<T>(
-    var value: T,
-    var leftNode: BSTNode<T>? = null,
-    var rightNode: BSTNode<T>? = null
-) : TreeNode<T> {
-    var height: Int = 1
-    var count: Int = 1 // To manage duplicates
-    inline fun balancingFactor(): Int {
-        return (this.leftNode?.height ?: 0) - (this.rightNode?.height ?: 0)
-    }
-
-    inline fun maxChildHeight(): Int {
-        return max(this.leftNode?.height ?: 0, this.rightNode?.height ?: 0)
-    }
-
-    override fun value(): T {
-        return value
-    }
-
-    override fun leftNode(): TreeNode<T>? {
-        return leftNode
-    }
-
-    override fun rightNode(): TreeNode<T>? {
-        return rightNode
-    }
-}
-
-interface BSTTree<T : Comparable<T>> : Tree<T> {
-    fun insert(value: T)
-}
-
-
-/**
+ * AVL Tree:
  * Creates a self balancing Binary tree
  * Left is smaller than parent and right is greater than or equal to parent
  */
@@ -145,4 +110,40 @@ class AVLTree<T : Comparable<T>> : BSTTree<T> {
 
 fun <T : Comparable<T>> AVLTree<T>.height(): Int {
     return (root() as BSTNode).height
+}
+
+
+/**
+ * AVL Tree node
+ */
+class BSTNode<T>(
+    var value: T,
+    var leftNode: BSTNode<T>? = null,
+    var rightNode: BSTNode<T>? = null
+) : TreeNode<T> {
+    var height: Int = 1
+    var count: Int = 1 // To manage duplicates
+    inline fun balancingFactor(): Int {
+        return (this.leftNode?.height ?: 0) - (this.rightNode?.height ?: 0)
+    }
+
+    inline fun maxChildHeight(): Int {
+        return max(this.leftNode?.height ?: 0, this.rightNode?.height ?: 0)
+    }
+
+    override fun value(): T {
+        return value
+    }
+
+    override fun leftNode(): TreeNode<T>? {
+        return leftNode
+    }
+
+    override fun rightNode(): TreeNode<T>? {
+        return rightNode
+    }
+}
+
+interface BSTTree<T : Comparable<T>> : Tree<T> {
+    fun insert(value: T)
 }

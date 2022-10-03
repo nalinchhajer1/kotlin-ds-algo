@@ -4,7 +4,6 @@ package com.nalin.datastructurealgorithm.ds
  * Min heap, max heap, priority queue
  * sortByMin = false is max heap else min heap
  */
-
 class Heap<T : Comparable<T>>(
     val sortByMin: Boolean = true,
     val initialArray: List<T>? = null

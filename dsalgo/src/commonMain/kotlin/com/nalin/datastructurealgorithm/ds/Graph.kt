@@ -3,6 +3,10 @@ package com.nalin.datastructurealgorithm.ds
 val GRAPH_UNDIRECTED = 1
 val GRAPH_DIRECTED = 0
 
+/**
+ * Graph:
+ * Create graph in format of Adjacency list. It stores connection for each node internally.
+ */
 class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
     val nodes: MutableMap<T, MutableSet<Edge<T>>> = mutableMapOf()
 
