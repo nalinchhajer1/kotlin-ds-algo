@@ -3,33 +3,19 @@ package com.nalin.datastructurealgorithm.ds
 import kotlin.math.abs
 import kotlin.math.max
 
+interface Tree<out T> {
+    fun root(): TreeNode<T>?
+    fun size(): Int
+}
+
 interface TreeNode<out T> {
     fun value(): T
     fun leftNode(): TreeNode<T>?
     fun rightNode(): TreeNode<T>?
 }
 
-interface Tree<out T> {
-    fun root(): TreeNode<T>?
-    fun size(): Int
-}
-
-class TreeNodeImpl<T>(
-    var value: T,
-    var leftNode: TreeNodeImpl<T>? = null,
-    var rightNode: TreeNodeImpl<T>? = null
-) : TreeNode<T> {
-    override fun value(): T {
-        return value
-    }
-
-    override fun leftNode(): TreeNodeImpl<T>? {
-        return leftNode
-    }
-
-    override fun rightNode(): TreeNodeImpl<T>? {
-        return rightNode
-    }
+interface BSTTree<T : Comparable<T>> : Tree<T> {
+    fun insert(value: T)
 }
 
 fun <T : Comparable<T>> Tree<T>.search(value: T): Boolean {
@@ -97,6 +83,17 @@ fun <T> TreeNode<T>.min(): T? {
 }
 
 /**
+ * return min of node, or null
+ */
+fun <T> TreeNode<T>.max(): T? {
+    var traverseNode: TreeNode<T>? = this;
+    while (traverseNode?.rightNode() != null) {
+        traverseNode = traverseNode.rightNode()
+    }
+    return traverseNode?.value()
+}
+
+/**
  * Depth of tree
  */
 fun <T> TreeNode<T>.height(): Int {
@@ -149,17 +146,6 @@ private fun <T> TreeNode<T>.checkBalance(): Int {
     return max(lh, rh) + 1
 }
 
-/**
- * return min of node, or null
- */
-fun <T> TreeNode<T>.max(): T? {
-    var traverseNode: TreeNode<T>? = this;
-    while (traverseNode?.rightNode() != null) {
-        traverseNode = traverseNode.rightNode()
-    }
-    return traverseNode?.value()
-}
-
 
 class ArrayTree<T>(array: Array<T?>) : Tree<T> {
     var root: ArrayTreeNode<T>? = null
@@ -210,6 +196,24 @@ class ArrayTreeNode<T>(
         return rightNode
     }
 
+}
+
+class TreeNodeImpl<T>(
+    var value: T,
+    var leftNode: TreeNodeImpl<T>? = null,
+    var rightNode: TreeNodeImpl<T>? = null
+) : TreeNode<T> {
+    override fun value(): T {
+        return value
+    }
+
+    override fun leftNode(): TreeNodeImpl<T>? {
+        return leftNode
+    }
+
+    override fun rightNode(): TreeNodeImpl<T>? {
+        return rightNode
+    }
 }
 
 

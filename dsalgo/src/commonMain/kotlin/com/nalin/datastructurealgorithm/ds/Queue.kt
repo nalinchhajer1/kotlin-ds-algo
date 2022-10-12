@@ -3,6 +3,7 @@ package com.nalin.datastructurealgorithm.ds
 class Queue<T> {
     var headNode: LinkedListNode<T>? = null
     var lastNode: LinkedListNode<T>? = null
+    var size = 0;
 
     fun enqueue(value: T) {
         if (lastNode == null) {
@@ -12,6 +13,7 @@ class Queue<T> {
             lastNode?.nextNode = LinkedListNode(value)
             lastNode = lastNode?.nextNode
         }
+        size++
     }
 
     fun dequeue(): T? {
@@ -22,6 +24,7 @@ class Queue<T> {
         } else {
             headNode = headNode?.nextNode
         }
+        size--
         return node?.value
     }
 

@@ -90,9 +90,13 @@ class DataStructureTest {
         graph2.addEdge('4', '1')
         graph2.addEdge('2', '3')
         graph2.addEdge('3', '1')
-        assertEquals(graph2.nodeTraversalDFS(), listOf<Char>('5', '2', '3', '1', '4', '0'))
-        assertEquals(graph2.nodeTraversalBFS(), listOf<Char>('5', '2', '0', '3', '4', '1'))
-        assertEquals(graph2.nodeTraversalTopological(), listOf<Char>('0', '4', '1', '3', '2', '5'))
+        graph2.addNode('7');
+        assertEquals(graph2.nodeTraversalDFS(), listOf<Char>('5', '2', '3', '1', '4', '0', '7'))
+        assertEquals(graph2.nodeTraversalBFS(), listOf<Char>('5', '2', '0', '3', '4', '1', '7'))
+        assertEquals(
+            graph2.nodeTraversalTopological(),
+            listOf<Char>('0', '4', '1', '3', '2', '5', '7')
+        )
 
     }
 

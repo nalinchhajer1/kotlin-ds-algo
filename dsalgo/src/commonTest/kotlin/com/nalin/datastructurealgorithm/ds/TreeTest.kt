@@ -1,4 +1,4 @@
-package com.nalin.datastructurealgorithm.problem
+package com.nalin.datastructurealgorithm.ds
 
 import com.nalin.datastructurealgorithm.ds.*
 import kotlin.test.Test

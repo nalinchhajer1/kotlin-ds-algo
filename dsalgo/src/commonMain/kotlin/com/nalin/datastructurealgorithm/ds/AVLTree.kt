@@ -143,7 +143,3 @@ class BSTNode<T>(
         return rightNode
     }
 }
-
-interface BSTTree<T : Comparable<T>> : Tree<T> {
-    fun insert(value: T)
-}

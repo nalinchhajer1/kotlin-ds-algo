@@ -46,6 +46,17 @@ class IndexedPriorityQueue<T : Comparable<T>>(
         heap.invalidate(dict[value]!!)
     }
 
+    /**
+     * Return priority of a node, if node not found, return -1
+     */
+    fun getPriority(value: T) : Int? {
+        return if (dict[value] != null) {
+            heap.array[dict[value]!!].priority
+        } else {
+            return null
+        }
+    }
+
     fun remove(value: T): T {
         val index = dict[value]!!
         dict.remove(value)
@@ -54,6 +65,10 @@ class IndexedPriorityQueue<T : Comparable<T>>(
 
     private fun onIndexChange(node: InternalNode<T>, index: Int) {
         dict[node.value] = index
+    }
+
+    fun contains(value: T) : Boolean {
+        return dict[value] != null
     }
 
 }

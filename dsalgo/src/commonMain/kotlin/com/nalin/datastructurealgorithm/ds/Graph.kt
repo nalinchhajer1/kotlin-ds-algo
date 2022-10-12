@@ -1,5 +1,7 @@
 package com.nalin.datastructurealgorithm.ds
 
+import kotlin.math.min
+
 val GRAPH_UNDIRECTED = 1
 val GRAPH_DIRECTED = 0
 
@@ -34,6 +36,14 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
             nodes[node] = mutableSetOf()
         }
         return nodes[node]!!
+    }
+
+    fun getEdges(node: T): MutableIterator<Edge<T>> {
+        return nodes[node]?.iterator() ?: mutableSetOf<Edge<T>>().iterator()
+    }
+
+    fun getNodes(): MutableIterator<T> {
+        return nodes.keys.iterator()
     }
 
     fun nodeTraversalDFS(startNode: T? = null): MutableList<T> {
@@ -125,4 +135,113 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
         return traversal
     }
 
+}
+
+/**
+ * Dijkstra Algorithm
+ * Given a graph and a source vertex in the graph, find the shortest paths from the source to all vertices in the given graph.
+ * O((E+V)log V)
+ */
+fun <T : Comparable<T>> AdjacencyListGraph<T>.findShortestPath_dijkstra(
+    sourceNode: T
+): MutableMap<T, Int> {
+    // use priority queue to select shortest possible destination
+    val distance = mutableMapOf<T, Int>() // Stores distance for each node
+    val queue = IndexedPriorityQueue<T>(true)
+    val visited = mutableMapOf<T, Boolean>()
+
+    fun traverse() {
+        val node = queue.pop()!!
+
+        visited[node] = true
+        val traversal = getEdges(node)
+        while (traversal.hasNext()) {
+            val nextEdge = traversal.next();
+            if (visited[nextEdge.node] != true) {
+                val newDistance =
+                    min(distance[nextEdge.node] ?: Int.MAX_VALUE, distance[node]!! + nextEdge.value)
+                distance[nextEdge.node] = newDistance
+                if (queue.contains(nextEdge.node)) {
+                    if (queue.getPriority(nextEdge.node)!! < newDistance) {
+                        queue.changePriority(nextEdge.node, newDistance)
+                    }
+                } else {
+                    queue.push(nextEdge.node, newDistance)
+                }
+            }
+        }
+        if (queue.peek() != null) {
+            traverse()
+        }
+
+    }
+
+    queue.push(sourceNode, 0)
+    distance[sourceNode] = 0
+    traverse()
+
+    return distance
+}
+
+/**
+ * Return Topological sorting by Kahn Algorithm, first add all 0 our degree and then others
+ */
+fun <T : Comparable<T>> AdjacencyListGraph<T>.topologicalOrdering_KahnAlgorithm(): MutableList<T> {
+    val indegreeNodes: MutableMap<T, Int> = calculateInDegreeOfNodes()
+    val queue = Queue<T>();
+    val topologicalSort = mutableListOf<T>()
+    val nodeToAddInQueue = findNodesWithKDegree(indegreeNodes, 0)
+    for (node in nodeToAddInQueue) {
+        indegreeNodes.remove(node)
+        queue.enqueue(node)
+    }
+    while (queue.size > 0) {
+        val baseNode = queue.dequeue()
+        topologicalSort.add(baseNode!!)
+        val traversal = getEdges(baseNode)
+        while (traversal.hasNext()) {
+            val edgeNode = traversal.next().node
+            if (indegreeNodes[edgeNode] != null) {
+                indegreeNodes[edgeNode] = indegreeNodes[edgeNode]!! - 1
+                if (indegreeNodes[edgeNode] == 0) {
+                    indegreeNodes.remove(edgeNode);
+                    queue.enqueue(edgeNode)
+                }
+            }
+        }
+    }
+    return topologicalSort
+}
+
+fun <T> AdjacencyListGraph<T>.findNodesWithKDegree(
+    indegreeNode: MutableMap<T, Int>,
+    degree: Int
+): MutableList<T> {
+    val output = mutableListOf<T>()
+    val nodeIterator = getNodes()
+    while (nodeIterator.hasNext()) {
+        val node = nodeIterator.next()
+        if ((indegreeNode[node] ?: 0) == degree) {
+            output.add(node)
+        }
+    }
+    return output
+}
+
+/**
+ * Calculates Indegee of all nodes
+ */
+fun <T> AdjacencyListGraph<T>.calculateInDegreeOfNodes(): MutableMap<T, Int> {
+    val inDegree = mutableMapOf<T, Int>()
+    val nodeIterator = getNodes()
+    while (nodeIterator.hasNext()) {
+        val node = nodeIterator.next()
+        inDegree[node] = inDegree[node] ?: 0
+        val edgeIterator = getEdges(node)
+        while (edgeIterator.hasNext()) {
+            val edge = edgeIterator.next()
+            inDegree[edge.node] = (inDegree[edge.node] ?: 0) + 1
+        }
+    }
+    return inDegree
 }
