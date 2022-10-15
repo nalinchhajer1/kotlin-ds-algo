@@ -22,6 +22,9 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
         }
     }
 
+    /**
+     * Add Edge from node1 to node2, if node not created, it created one
+     */
     fun addEdge(node1: T, node2: T, value: Int = 1) {
         addNode(node1).add(Edge(node2, value))
         if (directionType == GRAPH_UNDIRECTED) {
@@ -31,6 +34,9 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
         }
     }
 
+    /**
+     * Add Node
+     */
     fun addNode(node: T): MutableSet<Edge<T>> {
         if (nodes[node] == null) {
             nodes[node] = mutableSetOf()
@@ -38,101 +44,39 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
         return nodes[node]!!
     }
 
+    /**
+     * return edges
+     */
     fun getEdges(node: T): MutableIterator<Edge<T>> {
         return nodes[node]?.iterator() ?: mutableSetOf<Edge<T>>().iterator()
     }
 
+    /**
+     * get nodes iterator
+     */
     fun getNodes(): MutableIterator<T> {
         return nodes.keys.iterator()
     }
 
-    fun nodeTraversalDFS(startNode: T? = null): MutableList<T> {
-        val traversal = mutableListOf<T>()
-        val isVisited = mutableMapOf<T, Boolean>()
-        fun traverse(node: T) {
-            traversal.add(node)
-            isVisited[node] = true
-            val edges = nodes[node]!!
-            for (edge in edges) {
-                if (isVisited[edge.node] != true) {
-                    traverse(edge.node)
-                }
-            }
-        }
-
-        if (startNode != null) {
-            traverse(startNode)
-        }
-
-        for ((k, _) in nodes) {
-            if (isVisited[k] != true) {
-                traverse(k)
-            }
-        }
-        return traversal
+    /**
+     * Clear all nodes and Edges, it is same as new
+     */
+    fun clear() {
+        nodes.clear()
     }
 
-    fun nodeTraversalBFS(startNode: T? = null): MutableList<T> {
-        val traversal = mutableListOf<T>()
-        val isVisited = mutableMapOf<T, Boolean>()
-        val queue = SetQueue<T>()
-        var traverse: (() -> Unit)? = null
-        fun runQueue() {
-            while (queue.peek() != null) {
-                traverse?.let { it() }
-            }
-        }
-        traverse = fun() {
-            val node = queue.dequeue() ?: return
-            traversal.add(node)
-            isVisited[node] = true
-            val edges = nodes[node]!!
-            for (edge in edges) {
-                if (isVisited[edge.node] != true) {
-                    queue.enqueue(edge.node)
-                }
-            }
-            runQueue()
-        }
-
-        if (startNode != null) {
-            queue.enqueue(startNode)
-            runQueue()
-        }
-
-        for ((k, _) in nodes) {
-            if (isVisited[k] != true) {
-                queue.enqueue(k)
-                runQueue()
-            }
-        }
-        return traversal
+    /**
+     * returns if empty
+     */
+    fun isEmpty(): Boolean {
+        return nodes.isEmpty()
     }
 
-    fun nodeTraversalTopological(startNode: T? = null): MutableList<T> {
-        val traversal = mutableListOf<T>()
-        val isVisited = mutableMapOf<T, Boolean>()
-        fun traverse(node: T) {
-            isVisited[node] = true
-            val edges = nodes[node]!!
-            for (edge in edges) {
-                if (isVisited[edge.node] != true) {
-                    traverse(edge.node)
-                }
-            }
-            traversal.add(node)
-        }
-
-        if (startNode != null) {
-            traverse(startNode)
-        }
-
-        for ((k, _) in nodes) {
-            if (isVisited[k] != true) {
-                traverse(k)
-            }
-        }
-        return traversal
+    /**
+     * Checks if contains Node
+     */
+    fun containsNode(node: T): Boolean {
+        return nodes[node] != null
     }
 
 }
@@ -154,9 +98,7 @@ fun <T : Comparable<T>> AdjacencyListGraph<T>.findShortestPath_dijkstra(
         val node = queue.pop()!!
 
         visited[node] = true
-        val traversal = getEdges(node)
-        while (traversal.hasNext()) {
-            val nextEdge = traversal.next();
+        for (nextEdge in getEdges(node)) {
             if (visited[nextEdge.node] != true) {
                 val newDistance =
                     min(distance[nextEdge.node] ?: Int.MAX_VALUE, distance[node]!! + nextEdge.value)
@@ -173,12 +115,13 @@ fun <T : Comparable<T>> AdjacencyListGraph<T>.findShortestPath_dijkstra(
         if (queue.peek() != null) {
             traverse()
         }
-
     }
 
-    queue.push(sourceNode, 0)
-    distance[sourceNode] = 0
-    traverse()
+    if (containsNode(sourceNode)) {
+        queue.push(sourceNode, 0)
+        distance[sourceNode] = 0
+        traverse()
+    }
 
     return distance
 }
@@ -188,9 +131,10 @@ fun <T : Comparable<T>> AdjacencyListGraph<T>.findShortestPath_dijkstra(
  */
 fun <T : Comparable<T>> AdjacencyListGraph<T>.topologicalOrdering_KahnAlgorithm(): MutableList<T> {
     val indegreeNodes: MutableMap<T, Int> = calculateInDegreeOfNodes()
+    val minDegree = indegreeNodes.values.minOfOrNull { v -> v } ?: 0
     val queue = Queue<T>();
     val topologicalSort = mutableListOf<T>()
-    val nodeToAddInQueue = findNodesWithKDegree(indegreeNodes, 0)
+    val nodeToAddInQueue = findNodesWithKDegree(indegreeNodes, minDegree)
     for (node in nodeToAddInQueue) {
         indegreeNodes.remove(node)
         queue.enqueue(node)
@@ -198,9 +142,8 @@ fun <T : Comparable<T>> AdjacencyListGraph<T>.topologicalOrdering_KahnAlgorithm(
     while (queue.size > 0) {
         val baseNode = queue.dequeue()
         topologicalSort.add(baseNode!!)
-        val traversal = getEdges(baseNode)
-        while (traversal.hasNext()) {
-            val edgeNode = traversal.next().node
+        for (edge in getEdges(baseNode)) {
+            val edgeNode = edge.node
             if (indegreeNodes[edgeNode] != null) {
                 indegreeNodes[edgeNode] = indegreeNodes[edgeNode]!! - 1
                 if (indegreeNodes[edgeNode] == 0) {
@@ -218,9 +161,7 @@ fun <T> AdjacencyListGraph<T>.findNodesWithKDegree(
     degree: Int
 ): MutableList<T> {
     val output = mutableListOf<T>()
-    val nodeIterator = getNodes()
-    while (nodeIterator.hasNext()) {
-        val node = nodeIterator.next()
+    for (node in getNodes()) {
         if ((indegreeNode[node] ?: 0) == degree) {
             output.add(node)
         }
@@ -233,15 +174,131 @@ fun <T> AdjacencyListGraph<T>.findNodesWithKDegree(
  */
 fun <T> AdjacencyListGraph<T>.calculateInDegreeOfNodes(): MutableMap<T, Int> {
     val inDegree = mutableMapOf<T, Int>()
-    val nodeIterator = getNodes()
-    while (nodeIterator.hasNext()) {
-        val node = nodeIterator.next()
+    for (node in getNodes()) {
         inDegree[node] = inDegree[node] ?: 0
-        val edgeIterator = getEdges(node)
-        while (edgeIterator.hasNext()) {
-            val edge = edgeIterator.next()
+        for (edge in getEdges(node)) {
             inDegree[edge.node] = (inDegree[edge.node] ?: 0) + 1
         }
     }
     return inDegree
+}
+
+/**
+ * Validate if given order is topological order, source is before destination
+ */
+fun <T> AdjacencyListGraph<T>.validateTopologicalOrdering(nodeInOrder: List<T>): Boolean {
+    val nodeToPos = mutableMapOf<T, Int>()
+    nodeInOrder.forEachIndexed { pos, item ->
+        nodeToPos[item] = pos
+    }
+
+    for (node in getNodes()) {
+        for (edge in getEdges(node)) {
+            if (nodeToPos[node]!! >= nodeToPos[edge.node]!!) {
+                return false
+            }
+        }
+    }
+    return true
+}
+
+/**
+ * Node traversal as DFS
+ * O (E+N)
+ */
+fun <T> AdjacencyListGraph<T>.nodeTraversalDFS(startNode: T? = null): MutableList<T> {
+    val traversal = mutableListOf<T>()
+    val isVisited = mutableMapOf<T, Boolean>()
+    fun traverse(node: T) {
+        traversal.add(node)
+        isVisited[node] = true
+        val edges = nodes[node]!!
+        for (edge in edges) {
+            if (isVisited[edge.node] != true) {
+                traverse(edge.node)
+            }
+        }
+    }
+
+    if (startNode != null) {
+        traverse(startNode)
+    }
+
+    for ((k, _) in nodes) {
+        if (isVisited[k] != true) {
+            traverse(k)
+        }
+    }
+    return traversal
+}
+
+/**
+ * Node traversal as BFS
+ * O (E+N)
+ */
+fun <T> AdjacencyListGraph<T>.nodeTraversalBFS(startNode: T? = null): MutableList<T> {
+    val traversal = mutableListOf<T>()
+    val isVisited = mutableMapOf<T, Boolean>()
+    val queue = SetQueue<T>()
+    var traverse: (() -> Unit)? = null
+    fun runQueue() {
+        while (queue.peek() != null) {
+            traverse?.let { it() }
+        }
+    }
+    traverse = fun() {
+        val node = queue.dequeue() ?: return
+        traversal.add(node)
+        isVisited[node] = true
+        val edges = nodes[node]!!
+        for (edge in edges) {
+            if (isVisited[edge.node] != true) {
+                queue.enqueue(edge.node)
+            }
+        }
+        runQueue()
+    }
+
+    if (startNode != null) {
+        queue.enqueue(startNode)
+        runQueue()
+    }
+
+    for ((k, _) in nodes) {
+        if (isVisited[k] != true) {
+            queue.enqueue(k)
+            runQueue()
+        }
+    }
+    return traversal
+}
+
+/**
+ * Node traversal in Topological
+ * O (E+N)
+ */
+fun <T> AdjacencyListGraph<T>.nodeTraversalTopological(startNode: T? = null): MutableList<T> {
+    val traversal = mutableListOf<T>()
+    val isVisited = mutableMapOf<T, Boolean>()
+    fun traverse(node: T) {
+        isVisited[node] = true
+        val edges = nodes[node]!!
+        for (edge in edges) {
+            if (isVisited[edge.node] != true) {
+                traverse(edge.node)
+            }
+        }
+        traversal.add(node)
+    }
+
+    if (startNode != null) {
+        traverse(startNode)
+    }
+
+    for ((k, _) in nodes) {
+        if (isVisited[k] != true) {
+            traverse(k)
+        }
+    }
+    return traversal
 }

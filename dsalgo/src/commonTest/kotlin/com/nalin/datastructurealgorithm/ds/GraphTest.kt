@@ -56,6 +56,9 @@ class GraphTest {
                 8 to 7,
             )
         )
+
+        graph.clear()
+        assertEquals(graph.findShortestPath_dijkstra(1), mutableMapOf(1 to 0))
     }
 
     @Test
@@ -81,11 +84,29 @@ class GraphTest {
         graph.addEdge(1, 4)
         graph.addNode(13)
         assertEquals(graph.calculateInDegreeOfNodes()[13], 0)
+        val result = listOf(9, 0, 13, 10, 2, 3, 6, 1, 7, 11, 4, 12, 5, 8)
         assertEquals(
             graph.topologicalOrdering_KahnAlgorithm(),
-            listOf<Int>(9, 0, 13, 10, 2, 3, 6, 1, 7, 11, 4, 12, 5, 8)
+            result
         )
-//        expect(topologicalOrderingKahnAlgorithm(listGraph)).toEqual(['0','9','13','3','2','10','1','6','7','11','4','12','5','8']);
+
+        assertEquals(graph.validateTopologicalOrdering(result), true)
+
+        graph.clear()
+        graph.addEdge(1, 2)
+        graph.addEdge(2, 3)
+        graph.addEdge(3, 1)
+        assertEquals(graph.calculateInDegreeOfNodes(), mutableMapOf(1 to 1, 2 to 1, 3 to 1))
+        assertEquals(
+            graph.topologicalOrdering_KahnAlgorithm(),
+            listOf(1, 2, 3)
+        )
+
+        graph.clear()
+        assertEquals(
+            graph.topologicalOrdering_KahnAlgorithm(),
+            listOf()
+        )
     }
 
 }
