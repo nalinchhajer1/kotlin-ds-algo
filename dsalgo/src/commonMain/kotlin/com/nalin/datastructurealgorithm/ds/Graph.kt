@@ -11,27 +11,24 @@ val GRAPH_DIRECTED = 0
  */
 class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
     val nodes: MutableMap<T, MutableSet<Edge<T>>> = mutableMapOf()
+    var nodeCount = 0
+    var edgesCount = 0
 
-    data class Edge<T>(val node: T, val value: Int) {
-        override fun hashCode(): Int {
-            return node.hashCode()
-        }
-
-        override fun equals(other: Any?): Boolean {
-            return (other is Edge<*>) && node == other.node
-        }
-    }
+    data class Edge<T>(val node: T, val value: Int)
 
     /**
      * Add Edge from node1 to node2, if node not created, it created one
      */
     fun addEdge(node1: T, node2: T, value: Int = 1) {
-        addNode(node1).add(Edge(node2, value))
+        if (addNode(node1).add(Edge(node2, value))) {
+            edgesCount++
+        }
         if (directionType == GRAPH_UNDIRECTED) {
             addNode(node2).add(Edge(node1, value))
         } else {
             addNode(node2)
         }
+
     }
 
     /**
@@ -40,6 +37,7 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
     fun addNode(node: T): MutableSet<Edge<T>> {
         if (nodes[node] == null) {
             nodes[node] = mutableSetOf()
+            nodeCount++
         }
         return nodes[node]!!
     }
@@ -63,6 +61,8 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
      */
     fun clear() {
         nodes.clear()
+        edgesCount = 0
+        nodeCount = 0
     }
 
     /**
@@ -77,6 +77,28 @@ class AdjacencyListGraph<T>(val directionType: Int = GRAPH_DIRECTED) {
      */
     fun containsNode(node: T): Boolean {
         return nodes[node] != null
+    }
+
+    fun removeEdge(fromNode: T, toNode: T): Boolean {
+        var result = false
+        val iterator = getEdges(fromNode)
+        while (iterator.hasNext()) {
+            if (iterator.next().node == toNode) {
+                iterator.remove()
+                edgesCount--
+                result = result || true
+            }
+        }
+        return result
+    }
+
+    fun removeNode(node: T): MutableSet<Edge<T>>? {
+        val result = nodes.remove(node)
+        nodeCount--
+        for (edgeNode in getNodes()) {
+            removeEdge(edgeNode, node)
+        }
+        return result
     }
 
 }
@@ -302,3 +324,70 @@ fun <T> AdjacencyListGraph<T>.nodeTraversalTopological(startNode: T? = null): Mu
     }
     return traversal
 }
+
+/**
+ * Ensure lNode < rNode
+ */
+data class MSTEdge<T : Comparable<T>> private constructor(
+    private val node1: T,
+    private val node2: T,
+    val value: Int
+) {
+    val lNode: T get() = node1
+    val rNode: T get() = node2
+
+    companion object {
+        fun <T : Comparable<T>> create(lNode: T, rNode: T, value: Int): MSTEdge<T> {
+            return MSTEdge(
+                if (lNode < rNode) lNode else rNode,
+                if (lNode < rNode) rNode else lNode,
+                value
+            )
+        }
+    }
+
+
+}
+
+// Minimum spanning tree, for undirected_graph
+fun <T : Comparable<T>> AdjacencyListGraph<T>.minumSpanningTree_kruskal(): AdjacencyListGraph<T> {
+    val sortedEdges = getAllEdgesSortedByValue()
+    val mstGraph = AdjacencyListGraph<T>(GRAPH_UNDIRECTED)
+    val unionFind = UnionFind<T>()
+    for (edge in sortedEdges) {
+        if (!unionFind.isConnected(edge.lNode, edge.rNode)) {
+            unionFind.union(edge.lNode, edge.rNode)
+            mstGraph.addEdge(edge.lNode, edge.rNode, edge.value)
+        }
+    }
+    return mstGraph
+}
+
+fun <T : Comparable<T>> AdjacencyListGraph<T>.getAllEdgesSortedByValue(): List<MSTEdge<T>> {
+    val edges = HashSet<MSTEdge<T>>()
+    for (node in getNodes()) {
+        for (edge in getEdges(node)) {
+            edges.add(MSTEdge.create(node, edge.node, edge.value))
+        }
+    }
+
+    val sortedEdges = edges.sortedBy { it.value }
+    return sortedEdges
+}
+
+
+//// Rooting a tree
+//// Given undirected Graph, find the root to the tree
+//// take the root element, and create a tree as it grows
+//fun <T> AdjacencyListGraph<T>.toTree() : GenericTree<T> {
+//    val tree = MultiChildrenTree<T>()
+//    val nodeTraversal = getNodes()
+//    if (nodeTraversal.hasNext()) {
+//        tree.root = MultiChildrenTreeNode(nodeTraversal.next())
+//        fun traverse(treeNode: MultiChildrenTreeNode)
+//
+//
+//    }
+//
+//    return tree
+//}

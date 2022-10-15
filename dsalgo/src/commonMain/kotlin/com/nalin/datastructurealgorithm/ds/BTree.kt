@@ -3,27 +3,26 @@ package com.nalin.datastructurealgorithm.ds
 import kotlin.math.abs
 import kotlin.math.max
 
-interface Tree<out T> {
-    fun root(): TreeNode<T>?
-    fun size(): Int
+interface BTree<out T> {
+    fun root(): BTreeNode<T>?
 }
 
-interface TreeNode<out T> {
+interface BTreeNode<out T> {
     fun value(): T
-    fun leftNode(): TreeNode<T>?
-    fun rightNode(): TreeNode<T>?
+    fun leftNode(): BTreeNode<T>?
+    fun rightNode(): BTreeNode<T>?
 }
 
-interface BSTTree<T : Comparable<T>> : Tree<T> {
+interface BSTTree<T : Comparable<T>> : BTree<T> {
     fun insert(value: T)
 }
 
-fun <T : Comparable<T>> Tree<T>.search(value: T): Boolean {
+fun <T : Comparable<T>> BTree<T>.search(value: T): Boolean {
     return find(value) != null
 }
 
-fun <T : Comparable<T>> Tree<T>.find(value: T): TreeNode<T>? {
-    var traverseNode: TreeNode<T>? = root()
+fun <T : Comparable<T>> BTree<T>.find(value: T): BTreeNode<T>? {
+    var traverseNode: BTreeNode<T>? = root()
     while (traverseNode != null) {
         if (value == traverseNode.value()) {
             return traverseNode;
@@ -40,28 +39,28 @@ fun <T : Comparable<T>> Tree<T>.find(value: T): TreeNode<T>? {
 /**
  * Check if given tree hold BST property and it is balanced
  */
-fun <T : Comparable<T>> Tree<T>.isBST(): Boolean {
+fun <T : Comparable<T>> BTree<T>.isBST(): Boolean {
     return root()?.isBST() ?: true
 }
 
-fun <T : Comparable<T>> Tree<T>.height(): Int {
+fun <T : Comparable<T>> BTree<T>.height(): Int {
     return root()?.height() ?: 0
 }
 
-fun <T> Tree<T>.isBalanced(): Boolean {
+fun <T> BTree<T>.isBalanced(): Boolean {
     return root()?.isBalanced() ?: true
 }
 
-fun <T : Comparable<T>> Tree<T>.isBalancedBST(): Boolean {
+fun <T : Comparable<T>> BTree<T>.isBalancedBST(): Boolean {
     return isBST() && isBalanced()
 }
 
 /**
  * return array of distinct node value
  */
-fun <T> TreeNode<T>.treeTraversalLTR(): List<T> {
+fun <T> BTreeNode<T>.treeTraversalLTR(): List<T> {
     val array = mutableListOf<T>()
-    fun _traversal(node: TreeNode<T>?) {
+    fun _traversal(node: BTreeNode<T>?) {
         if (node?.value() == null) return
         _traversal(node.leftNode())
         array.add(node.value()!!)
@@ -74,8 +73,8 @@ fun <T> TreeNode<T>.treeTraversalLTR(): List<T> {
 /**
  * return min of node, or null
  */
-fun <T> TreeNode<T>.min(): T? {
-    var traverseNode: TreeNode<T>? = this;
+fun <T> BTreeNode<T>.min(): T? {
+    var traverseNode: BTreeNode<T>? = this;
     while (traverseNode?.leftNode() != null) {
         traverseNode = traverseNode.leftNode()
     }
@@ -85,8 +84,8 @@ fun <T> TreeNode<T>.min(): T? {
 /**
  * return min of node, or null
  */
-fun <T> TreeNode<T>.max(): T? {
-    var traverseNode: TreeNode<T>? = this;
+fun <T> BTreeNode<T>.max(): T? {
+    var traverseNode: BTreeNode<T>? = this;
     while (traverseNode?.rightNode() != null) {
         traverseNode = traverseNode.rightNode()
     }
@@ -96,16 +95,16 @@ fun <T> TreeNode<T>.max(): T? {
 /**
  * Depth of tree
  */
-fun <T> TreeNode<T>.height(): Int {
+fun <T> BTreeNode<T>.height(): Int {
     return max((leftNode()?.height() ?: 0), (rightNode()?.height() ?: 0)) + 1
 }
 
 /**
  * Check if inorder traversal is in sorted order
  */
-fun <T : Comparable<T>> TreeNode<T>.isBST(): Boolean {
+fun <T : Comparable<T>> BTreeNode<T>.isBST(): Boolean {
     var lastVisit: T? = null
-    fun _traversal(node: TreeNode<T>?): Boolean {
+    fun _traversal(node: BTreeNode<T>?): Boolean {
         if (node == null) return true
         if (!_traversal(node.leftNode())) {
             return false
@@ -123,14 +122,14 @@ fun <T : Comparable<T>> TreeNode<T>.isBST(): Boolean {
 /**
  * Check if given tree is balanced
  */
-fun <T> TreeNode<T>.isBalanced(): Boolean {
+fun <T> BTreeNode<T>.isBalanced(): Boolean {
     return checkBalance() >= 0
 }
 
 /**
  * use height logic to check balance, if balance failed, avoid computation and return -1, else return height
  */
-private fun <T> TreeNode<T>.checkBalance(): Int {
+private fun <T> BTreeNode<T>.checkBalance(): Int {
     val lh: Int = leftNode()?.checkBalance() ?: 0
     if (lh == -1) {
         return -1
@@ -147,12 +146,12 @@ private fun <T> TreeNode<T>.checkBalance(): Int {
 }
 
 
-class ArrayTree<T>(array: Array<T?>) : Tree<T> {
+class ArrayTree<T>(array: Array<T?>) : BTree<T> {
     var root: ArrayTreeNode<T>? = null
     var size: Int = 0
 
     init {
-        fun _createTreeNode(rootNode: TreeNode<T>?, index: Int): ArrayTreeNode<T>? {
+        fun _createTreeNode(rootNode: BTreeNode<T>?, index: Int): ArrayTreeNode<T>? {
             if (index < array.size && array[index] != null) {
                 val node = ArrayTreeNode<T>(array[index]!!)
                 size++
@@ -169,7 +168,7 @@ class ArrayTree<T>(array: Array<T?>) : Tree<T> {
         return root
     }
 
-    override fun size(): Int {
+    fun size(): Int {
         return size
     }
 
@@ -179,7 +178,7 @@ class ArrayTreeNode<T>(
     value: T,
     var leftNode: ArrayTreeNode<T>? = null,
     var rightNode: ArrayTreeNode<T>? = null
-) : TreeNode<T> by TreeNodeImpl(value) {
+) : BTreeNode<T> by TreeNodeImpl(value) {
 
 
     companion object {
@@ -202,7 +201,7 @@ class TreeNodeImpl<T>(
     var value: T,
     var leftNode: TreeNodeImpl<T>? = null,
     var rightNode: TreeNodeImpl<T>? = null
-) : TreeNode<T> {
+) : BTreeNode<T> {
     override fun value(): T {
         return value
     }

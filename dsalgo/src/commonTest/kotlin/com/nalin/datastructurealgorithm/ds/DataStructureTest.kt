@@ -2,6 +2,7 @@ package com.nalin.datastructurealgorithm.ds
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 class DataStructureTest {
     var testSize = 10000
@@ -69,38 +70,6 @@ class DataStructureTest {
     }
 
     @Test
-    fun adjacencyListGraphTest() {
-        val graph = AdjacencyListGraph<Char>()
-        for (i in 0 until testSize) {
-            graph.addEdge('a' + i, 'a' + i + 1)
-        }
-        graph.addEdge('a', 'b')
-        assertEquals(graph.nodeTraversalDFS().size, testSize + 1)
-
-        val graph1 = AdjacencyListGraph<Char>(GRAPH_UNDIRECTED)
-        for (i in 0 until testSize) {
-            graph1.addEdge('a' + i, 'a' + i + 1)
-        }
-        assertEquals(graph1.nodeTraversalDFS().size, testSize + 1)
-
-        val graph2 = AdjacencyListGraph<Char>(GRAPH_UNDIRECTED)
-        graph2.addEdge('5', '2')
-        graph2.addEdge('5', '0')
-        graph2.addEdge('4', '0')
-        graph2.addEdge('4', '1')
-        graph2.addEdge('2', '3')
-        graph2.addEdge('3', '1')
-        graph2.addNode('7');
-        assertEquals(graph2.nodeTraversalDFS(), listOf<Char>('5', '2', '3', '1', '4', '0', '7'))
-        assertEquals(graph2.nodeTraversalBFS(), listOf<Char>('5', '2', '0', '3', '4', '1', '7'))
-        assertEquals(
-            graph2.nodeTraversalTopological(),
-            listOf<Char>('0', '4', '1', '3', '2', '5', '7')
-        )
-
-    }
-
-    @Test
     fun setQueue() {
         val queue = SetQueue<Int>()
         queue.enqueue(1)
@@ -128,5 +97,42 @@ class DataStructureTest {
         assertEquals(stack.pop(), 3)
         assertEquals(stack.pop(), 1)
         assertEquals(stack.pop(), null)
+    }
+
+    @Test
+    fun testUnionFind() {
+        val set = UnionFind<Int>()
+        set.union(0, 1)
+        set.union(0, 2)
+        set.union(1, 3)
+        assertEquals(set.find(0), set.find(3))
+        assertNotEquals(set.find(0), set.find(4))
+        assertEquals(set.parents, mutableMapOf(0 to 0, 1 to 0, 2 to 0, 3 to 0, 4 to 4))
+        set.union(8, 9)
+        set.union(5, 6)
+        set.union(4, 7)
+        assertEquals(set.find(4), set.find(7))
+        assertEquals(set.find(7), set.find(4))
+        set.union(6, 7)
+        set.union(9, 7)
+        assertEquals(
+            set.parents,
+            mutableMapOf(
+                0 to 0,
+                1 to 0,
+                2 to 0,
+                3 to 0,
+                4 to 5,
+                8 to 8,
+                9 to 8,
+                5 to 8,
+                6 to 5,
+                7 to 5
+            )
+        )
+        assertEquals(set.isConnected(9,0), false)
+        assertEquals(set.isConnected(9,3), false)
+        assertEquals(set.isConnected(6,9), true)
+        assertEquals(set.isConnected(6,6), true)
     }
 }

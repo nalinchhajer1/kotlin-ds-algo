@@ -27,7 +27,7 @@ class AVLTree<T : Comparable<T>> : BSTTree<T> {
     /**
      * Count
      */
-    override fun size(): Int {
+    fun size(): Int {
         return count
     }
 
@@ -120,7 +120,7 @@ class BSTNode<T>(
     var value: T,
     var leftNode: BSTNode<T>? = null,
     var rightNode: BSTNode<T>? = null
-) : TreeNode<T> {
+) : BTreeNode<T> {
     var height: Int = 1
     var count: Int = 1 // To manage duplicates
     inline fun balancingFactor(): Int {
@@ -135,11 +135,11 @@ class BSTNode<T>(
         return value
     }
 
-    override fun leftNode(): TreeNode<T>? {
+    override fun leftNode(): BTreeNode<T>? {
         return leftNode
     }
 
-    override fun rightNode(): TreeNode<T>? {
+    override fun rightNode(): BTreeNode<T>? {
         return rightNode
     }
 }
