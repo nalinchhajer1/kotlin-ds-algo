@@ -376,18 +376,61 @@ fun <T : Comparable<T>> AdjacencyListGraph<T>.getAllEdgesSortedByValue(): List<M
 }
 
 
-//// Rooting a tree
-//// Given undirected Graph, find the root to the tree
-//// take the root element, and create a tree as it grows
-//fun <T> AdjacencyListGraph<T>.toTree() : GenericTree<T> {
-//    val tree = MultiChildrenTree<T>()
-//    val nodeTraversal = getNodes()
-//    if (nodeTraversal.hasNext()) {
-//        tree.root = MultiChildrenTreeNode(nodeTraversal.next())
-//        fun traverse(treeNode: MultiChildrenTreeNode)
-//
-//
-//    }
-//
-//    return tree
-//}
+// Find all strongly connected components
+/**
+ * In the graph, strongly connected components are part of the graph that form cycles. Inside the cycles, all node can be visited from every other node
+ * 1. We will use DFS + Stack to find strongly connected components
+ * 2. We are going to mark a node with low link value, once we have visited all path on the DFS
+ *
+ * O(V+E)
+ */
+fun <T> AdjacencyListGraph<T>.findStronglyConnectedComponents_tarjan(): Int {
+    var id = 0 // low-link id
+    var sccCount = 0 //  number of strong connected component found
+    val nodeIds = mutableMapOf<T, Int>() // We will use this to track if visited or not
+    val nodeLowLinkId = mutableMapOf<T, Int>()
+    val nodeOnStack = mutableMapOf<T, Boolean>()
+    val stack = ArrayDeque<T>() // addLast. removeLast, size
+
+    fun traverse(node: T) {
+        stack.addLast(node)
+        nodeOnStack[node] = true
+        val lowLinkId = id++
+        nodeIds[node] = lowLinkId
+        nodeLowLinkId[node] = lowLinkId
+        val edges = nodes[node]!!
+        // Visit all neighbour and min low-link on callback
+        for (edge in edges) {
+            if (nodeIds[edge.node] == null) {
+                traverse(edge.node)
+            }
+            // reached all nodes
+            if (nodeOnStack[edge.node] != null) {
+                nodeLowLinkId[node] = min(nodeLowLinkId[node] ?: 0, nodeLowLinkId[edge.node] ?: 0)
+            }
+        }
+
+        // After visiting all neighbours, if we are at the start of SCC, empty the stack until we are back again at start of SCC (loop)
+        if (nodeIds[node] == nodeLowLinkId[node]) {
+            while (stack.size > 0) {
+                val stackNode = stack.removeLast()
+                nodeOnStack[stackNode] = false
+                nodeLowLinkId[stackNode] = nodeIds[node]!!
+                if (stackNode == node) {
+                    break
+                }
+            }
+            sccCount++
+        }
+    }
+
+    for ((k, _) in nodes) {
+        if (nodeIds[k] == null) {
+            traverse(k)
+        }
+    }
+
+    println("nodeLowLinkId ${nodeLowLinkId}")
+    println("nodeIds ${nodeIds}")
+    return sccCount
+}

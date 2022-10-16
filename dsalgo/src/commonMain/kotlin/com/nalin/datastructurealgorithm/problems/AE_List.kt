@@ -89,6 +89,9 @@ fun tandemBicycle(
     return totalPoint
 }
 
+/**
+ * Find 2 number whose sum = target number
+ */
 fun twoNumberSum(array: MutableList<Int>, targetSum: Int): List<Int> {
     val arraySet = mutableSetOf<Int>()
     for (num in array) {
@@ -105,6 +108,8 @@ fun twoNumberSum(array: MutableList<Int>, targetSum: Int): List<Int> {
 
 /**
  * https://www.algoexpert.io/questions/class-photos
+ * 1. All red shirts student will stand in one row and all blue in another
+ * 2. Student in front is always smaller than student in back
  */
 fun classPhotos(redShirtHeights: MutableList<Int>, blueShirtHeights: MutableList<Int>): Boolean {
     // Write your code here.
