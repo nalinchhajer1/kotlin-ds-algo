@@ -244,3 +244,56 @@ fun riverSizes(matrix: List<List<Int>>): List<Int> {
     return output
 }
 
+/**
+ * Subarray Sort -> Find unsorted subarray
+ * https://www.algoexpert.io/questions/subarray-sort
+ */
+fun unsortedSubarray(array: List<Int>): List<Int> {
+    // take from back, find min value in wrong position
+    // take from front, find max value in wrong position
+    if (array.size > 1) {
+        var foundMinIndex = -1
+        var foundMaxIndex = -1
+        var minValue = Int.MAX_VALUE
+        var maxValue = Int.MIN_VALUE
+        for (i in array.indices) {
+            // place where failure occur
+            if (i < array.size - 1 && array[i] > array[i + 1]) {
+                minValue = min(minValue, array[i + 1])
+                foundMinIndex = i + 1
+            }
+
+            if (i > 0 && array[i - 1] > array[i]) {
+                maxValue = max(maxValue, array[i - 1])
+                foundMaxIndex = i - 1
+            }
+        }
+
+
+        if (foundMaxIndex >= 0 || foundMinIndex >= 0) {
+
+            var posInsertMin = 0
+            for (i in array.indices) {
+                if (array[i] > minValue) {
+                    posInsertMin = i
+                    break;
+                }
+            }
+
+            var posInsertMax = array.size - 1
+            for (i in array.indices.reversed()) {
+                if (array[i] < maxValue) {
+                    posInsertMax = i
+                    break;
+                }
+            }
+            return listOf(posInsertMin, posInsertMax)
+        }
+    }
+
+
+    // Write your code here.
+    return listOf(-1, -1)
+}
+
+

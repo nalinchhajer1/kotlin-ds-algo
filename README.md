@@ -41,5 +41,8 @@ here [PerformanceTest.kt](./dsalgo/src/commonTest/kotlin/com/nalin/datastructure
 * [Tandem Bicycle](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/AE_List.kt)
 * [Linked List Palindrome](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/AE_List.kt)
 * [Merge overalapping Intervals](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/AE_List.kt)
+* [Find unsorted subarray](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/AE_List.kt)
 * [Insert in shifted circular linked list](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/FB_problems.kt)
 * [Find minimum value from shifted circular sorted Array](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/FB_problems.kt)
+* [DP Longest common subsequence](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/DynamicProgramming.kt)
+* [DP Edit Distance](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/DynamicProgramming.kt)

@@ -1,8 +1,7 @@
 package com.nalin.datastructurealgorithm.problem
 
 import com.nalin.datastructurealgorithm.ds.toArray
-import com.nalin.datastructurealgorithm.problems.findMinimum_shiftedSortedArray
-import com.nalin.datastructurealgorithm.problems.insertCircularLinkedList
+import com.nalin.datastructurealgorithm.problems.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -45,5 +44,67 @@ class FB_problem_test {
             root.toArray(),
             listOf(10, 10, 11, 11, 12, 13, 14, 14, 5, 5, 6, 6, 7, 7, 8, 9, 9)
         )
+    }
+
+    @Test
+    fun testMergeSortedArray() {
+        assertEquals(
+            mergeSortedArray(
+                arrayOf(null, null, null),
+                arrayOf(1, 2, 3)
+            ).joinToString { it.toString() }, arrayOf<Int?>(1, 2, 3).joinToString { it.toString() })
+
+        assertEquals(
+            mergeSortedArray(
+                arrayOf(1, 2, 3, null, null, null),
+                arrayOf(1, 2, 3)
+            ).joinToString { it.toString() },
+            arrayOf<Int?>(1, 1, 2, 2, 3, 3).joinToString { it.toString() })
+
+        assertEquals(
+            mergeSortedArray(
+                arrayOf(1, 2, 3),
+                arrayOf()
+            ).joinToString { it.toString() },
+            arrayOf<Int?>(1, 2, 3).joinToString { it.toString() })
+
+        assertEquals(
+            mergeSortedArray(
+                arrayOf(10, 11, 12, null, null, null),
+                arrayOf(1, 2, 3)
+            ).joinToString { it.toString() },
+            arrayOf<Int?>(1, 2, 3, 10, 11, 12).joinToString { it.toString() })
+
+        assertEquals(
+            mergeSortedArray(
+                arrayOf(1, 2, 3, null, null, null),
+                arrayOf(10, 11, 12)
+            ).joinToString { it.toString() },
+            arrayOf<Int?>(1, 2, 3, 10, 11, 12).joinToString { it.toString() })
+    }
+
+    @Test
+    fun testMergeDuplicateChar() {
+        assertEquals(mergeDuplicateChar("abccbc"), "ac")
+        assertEquals(mergeDuplicateChar(""), "")
+        assertEquals(mergeDuplicateChar("ab"), "ab")
+        assertEquals(mergeDuplicateChar("abccba"), "")
+    }
+
+    @Test
+    fun testFindPalindomeWithErrorProbabaility1() {
+        assertEquals(findPalindomeWithErrorProbabaility1("tacocats"), true)
+        assertEquals(findPalindomeWithErrorProbabaility1("racercar"), true)
+        assertEquals(findPalindomeWithErrorProbabaility1("kbayak"), true)
+        assertEquals(findPalindomeWithErrorProbabaility1("acbccba"), true)
+        assertEquals(findPalindomeWithErrorProbabaility1("abcd"), false)
+        assertEquals(findPalindomeWithErrorProbabaility1("btnnure"), false)
+    }
+
+    @Test
+    fun testsumOfConsecutiveElement() {
+        assertEquals(sumOfConsecutiveElement(listOf(1, 3, 1, 4, 23), 8), true)
+        assertEquals(sumOfConsecutiveElement(listOf(1, 3, 1, 4, 23), 7), false)
+//        assertEquals(sumOfConsecutiveElement(listOf(1, 3, 1, 4, 6), 7), false)
     }
 }

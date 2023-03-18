@@ -99,4 +99,14 @@ class AE_List_Test {
         assertEquals(riverSizes(listOf(listOf())), listOf());
     }
 
+    @Test
+    fun testSubarraySort() {
+//        assertEquals(subarraySort(listOf(1, 2, 4, 7, 10, 11, 7, 12, 6, 7, 16, 18, 19)), listOf(3,9))
+//        assertEquals(subarraySort(listOf(1)), listOf(-1,-1))
+//        assertEquals(subarraySort(listOf()), listOf(-1,-1))
+//        assertEquals(subarraySort(listOf(1,2)), listOf(-1,-1))
+//        assertEquals(subarraySort(listOf(1,2,3,4,3)), listOf(2,4))
+        assertEquals(unsortedSubarray(listOf(1, 2, 4, 7, 10, 11, 7, 12, 13, 14, 16, 18, 19)), listOf(4,6))
+    }
+
 }
