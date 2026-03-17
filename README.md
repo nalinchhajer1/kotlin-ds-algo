@@ -46,3 +46,25 @@ here [PerformanceTest.kt](./dsalgo/src/commonTest/kotlin/com/nalin/datastructure
 * [Find minimum value from shifted circular sorted Array](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/FB_problems.kt)
 * [DP Longest common subsequence](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/DynamicProgramming.kt)
 * [DP Edit Distance](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/DynamicProgramming.kt)
+* [Hard Challenge Track](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/HardChallenges.kt)
+
+## Hard Challenge Track
+
+If you want to practice at a higher interview bar, solve these in:
+[HardChallenges.kt](./dsalgo/src/commonMain/kotlin/com/nalin/datastructurealgorithm/problems/HardChallenges.kt)
+
+Matching example tests live in:
+[HardChallengesTest.kt](./dsalgo/src/commonTest/kotlin/com/nalin/datastructurealgorithm/problem/HardChallengesTest.kt)
+
+The current challenge set includes:
+
+* Dynamic graph connectivity with add/remove/query over time
+* K-th smallest element in subarray
+* Dynamic range median with updates
+* Minimum cost maximum flow
+* Shortest path with one discount
+* Distinct substrings using suffix automaton
+* Nearest red node using centroid decomposition
+* Max on path using heavy-light decomposition
+* 2-SAT satisfiability
+* Alien dictionary with invalid-order detection
